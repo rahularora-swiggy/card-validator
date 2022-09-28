@@ -128,7 +128,7 @@ function cardValidator(cardNumber) {
   this.month = null;
   this.year = null;
 
-  getCardType = function(number) {
+  this.getCardType = function(number) {
     var _j, _len;
     for(_j = 0, _len = cardTypes.length; _j < _len; _j++) {
       if(cardTypes[_j].hasOwnProperty('pattern') && number.match(cardTypes[_j].pattern)) {
@@ -147,7 +147,7 @@ function cardValidator(cardNumber) {
     return null;
   };
 
-  isValidLuhn = function(number) {
+  this.isValidLuhn = function(number) {
     var digit, _n, sum, _j, _len, _ref;
     sum = 0;
     _ref = number.split('').reverse();
@@ -168,17 +168,17 @@ function cardValidator(cardNumber) {
     return sum % 10 === 0;
   };
 
-  isValidLength = function(number, cardType) {
+  this.isValidLength = function(number, cardType) {
     var _ref1;
     return _ref1 = number.length, __indexOf.call(this.card.valid_length, _ref1) >= 0;
   };
 
-  validateCardNumber = function(number) {
-    this.card = getCardType(number);
+  this.validateCardNumber = function(number) {
+    this.card = this.getCardType(number);
     if(this.card && this.cardType) {
       this.cardType = this.card.name;
-      this.luhnValid = isValidLuhn(number);
-      this.lengthValid = isValidLength.call(this, number, this.card);
+      this.luhnValid = this.isValidLuhn(number);
+      this.lengthValid = this.isValidLength(number, this.card);
       this.cvvLength = this.card.cvv_length;
       this.gaps = this.card.gaps;
       this.supportedLengths = this.card.valid_length;
@@ -196,15 +196,15 @@ function cardValidator(cardNumber) {
     };
   };
 
-  normalize = function(number) {
+  this.normalize = function(number) {
     return number.toString().replace(/[ -]/g, '');
   };
 
   this.getCardDetails = function() {
     if(!this.cardNumber)
       throw 'Invalid cardNumber property set';
-    var number = normalize(this.cardNumber);
-    return validateCardNumber.call(this, number);
+    var number = this.normalize(this.cardNumber);
+    return this.validateCardNumber(number);
   };
 
   this.setBaseDate = function(month, year) {
